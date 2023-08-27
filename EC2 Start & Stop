@@ -1,0 +1,22 @@
+import boto3
+
+region = 'ap-south-1'
+instances = ['i-0842c3571315fd4dc']
+
+def lambda_handler(event, context):
+    ec2 = boto3.client('ec2', region_name=region)
+
+    # Check the current state of the instance
+    describe_instances = ec2.describe_instances(InstanceIds=instances)
+    state = describe_instances['Reservations'][0]['Instances'][0]['State']['Name']
+
+    if state == 'stopped':
+        # Start the instance
+        ec2.start_instances(InstanceIds=instances)
+        print('Started instance: ' + str(instances))
+    elif state == 'running':
+        # Stop the instance
+        ec2.stop_instances(InstanceIds=instances)
+        print('Stopped instance: ' + str(instances))
+    else:
+        print('Instance is in a pending or shutting-down state')
