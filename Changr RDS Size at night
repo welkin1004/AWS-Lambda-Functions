@@ -1,0 +1,18 @@
+import boto3
+def lambda_handler(event, context):
+    # Replace the values below with your own RDS instance information
+    db_instance_identifier = 'hmis-rcpbhavyabiharhealth-rds'
+    target_db_instance_class = 'db.m5.8xlarge'
+    
+    # Create a client object for the RDS service
+    rds = boto3.client('rds')
+    
+    # Modify the RDS instance with the new instance type
+    response = rds.modify_db_instance(
+        DBInstanceIdentifier=db_instance_identifier,
+        DBInstanceClass=target_db_instance_class,
+        ApplyImmediately=True
+    )
+    
+    # Print the response
+    print(response)
